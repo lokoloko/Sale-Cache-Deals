@@ -1,7 +1,3 @@
-// src/components/ui/select.tsx
-// This is a reusable Select (dropdown) component, likely adapted from ShadCN UI,
-// which builds upon Radix UI's Select primitives for accessibility and functionality.
-// It provides a styled dropdown menu for selecting an option from a list.
 
 "use client"; // Indicates this component can be used in Client Components.
 
@@ -38,7 +34,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon> {/* Removed asChild here in a previous fix, which was correct for Icon */}
+    <SelectPrimitive.Icon>
       <ChevronDown className="h-4 w-4 opacity-50" /> {/* Dropdown arrow icon. */}
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
@@ -90,36 +86,42 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", asChild, ...otherProps }, ref) => ( // Explicitly destructure `asChild`
-  <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
-    <SelectPrimitive.Content
-      ref={ref}
-      // Base Tailwind classes for content: z-index, max-height, width, overflow, border, background, shadow, animations for open/close states.
-      // `position="popper"` allows smart positioning relative to the trigger.
-      className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-        className
-      )}
-      position={position}
-      {...otherProps} // Pass `otherProps` which excludes `asChild`, preventing SelectPrimitive.Content from becoming a Slot with multiple children.
-    >
-      <SelectScrollUpButton />
-      <SelectPrimitive.Viewport
-        // Styling for the viewport within the content area.
+>(({ className, children, position = "popper", asChild, ...otherProps }, ref) => {
+  // `asChild` is explicitly destructured from props.
+  // `...otherProps` will NOT contain `asChild`.
+  // This prevents `SelectPrimitive.Content` from being treated as a Slot if our wrapper
+  // provides multiple children (which it does: SelectScrollUpButton, Viewport, SelectScrollDownButton).
+  return (
+    <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
+      <SelectPrimitive.Content
+        ref={ref}
+        // Base Tailwind classes for content: z-index, max-height, width, overflow, border, background, shadow, animations for open/close states.
+        // `position="popper"` allows smart positioning relative to the trigger.
         className={cn(
-          "p-1",
+          "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+          className
         )}
+        position={position}
+        {...otherProps} // Pass `otherProps` which explicitly excludes `asChild`.
       >
-        {children} {/* Contains <SelectItem /> components. */}
-      </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
-    </SelectPrimitive.Content>
-  </SelectPrimitive.Portal>
-))
+        <SelectScrollUpButton />
+        <SelectPrimitive.Viewport
+          // Styling for the viewport within the content area.
+          className={cn(
+            "p-1",
+            position === "popper" &&
+              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+          )}
+        >
+          {children} {/* Contains <SelectItem /> components. */}
+        </SelectPrimitive.Viewport>
+        <SelectScrollDownButton />
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  );
+})
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
 // --- SelectLabel Component ---
@@ -148,7 +150,11 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, asChild, ...otherProps }, ref) => { // Destructure asChild here too
+>(({ className, children, asChild, ...otherProps }, ref) => {
+  // `asChild` is explicitly destructured from props.
+  // `...otherProps` will NOT contain `asChild`.
+  // This prevents `SelectPrimitive.Item` from being treated as a Slot if our wrapper
+  // provides multiple children (which it does: span for checkmark, ItemText).
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -158,7 +164,7 @@ const SelectItem = React.forwardRef<
         "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
-      {...otherProps} // Pass `otherProps` which excludes `asChild`
+      {...otherProps} // Pass `otherProps` which explicitly excludes `asChild`.
     >
       {/* Span for positioning the checkmark icon. */}
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -203,3 +209,5 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
+
+    
