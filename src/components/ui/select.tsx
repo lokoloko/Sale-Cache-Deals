@@ -86,9 +86,12 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => {
+>(({ className, children, position = "popper", asChild, ...otherProps }, ref) => { // Explicitly destructure `asChild`
+  // `asChild` is captured and not passed via `otherProps` to `SelectPrimitive.Content`.
+  // This is crucial because our wrapper provides multiple children (ScrollUpButton, Viewport, ScrollDownButton)
+  // to `SelectPrimitive.Content`, which would conflict if `SelectPrimitive.Content` became a Slot.
   return (
-    <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
+    <SelectPrimitive.Portal container={otherProps.container}> {/* Pass only specific portal props like container */}
       <SelectPrimitive.Content
         ref={ref}
         // Base Tailwind classes for content: z-index, max-height, width, overflow, border, background, shadow, animations for open/close states.
@@ -100,7 +103,7 @@ const SelectContent = React.forwardRef<
           className
         )}
         position={position}
-        {...props} // Spread all props, including asChild if present.
+        {...otherProps} // Pass the rest of the props, which no longer include `asChild`.
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
@@ -146,7 +149,10 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => {
+>(({ className, children, asChild, ...otherProps }, ref) => { // Explicitly destructure `asChild`
+  // `asChild` is captured and not passed via `otherProps` to `SelectPrimitive.Item`.
+  // This is because our wrapper provides multiple children (span for checkmark, ItemText)
+  // to `SelectPrimitive.Item`, which would conflict if `SelectPrimitive.Item` became a Slot.
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -156,7 +162,7 @@ const SelectItem = React.forwardRef<
         "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
-      {...props} // Spread all props, including asChild if present.
+      {...otherProps} // Pass the rest of the props, which no longer include `asChild`.
     >
       {/* Span for positioning the checkmark icon. */}
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -201,3 +207,4 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
+
