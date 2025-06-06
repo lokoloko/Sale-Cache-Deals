@@ -26,8 +26,9 @@ async function getDeal(id: string): Promise<Deal | undefined> {
   return placeholderDeals.find((deal) => deal.id === id);
 }
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const deal = await getDeal(params.id);
+export default async function ProductDetailPage(props: ProductDetailPageProps) {
+  const awaitedParams = await props.params;
+  const deal = await getDeal(awaitedParams.id);
 
   if (!deal) {
     return (
