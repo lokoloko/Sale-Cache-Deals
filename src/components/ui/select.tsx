@@ -17,12 +17,11 @@ const SelectValue = SelectPrimitive.Value // Component to display the selected v
 /**
  * @component SelectTrigger
  * @description The button part of the select that opens/closes the dropdown.
- * This is a common UI pattern for dropdown controls.
  */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, asChild, ...otherProps }, ref) => ( // Destructure asChild
   <SelectPrimitive.Trigger
     ref={ref}
     // Base Tailwind classes for the trigger: flex, height, width, alignment, border, background, padding, text style, focus, disabled states.
@@ -31,10 +30,11 @@ const SelectTrigger = React.forwardRef<
       "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className // Allows overriding or extending styles.
     )}
-    {...props} // Spread all props, including asChild if present.
+    {...otherProps} // Pass otherProps (which doesn't include asChild)
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon> {/* Radix's Icon. No `asChild` here is generally correct. */}
+    {/* Explicitly set asChild={false} for Icon if it wraps a single icon component directly */}
+    <SelectPrimitive.Icon asChild={false}>
        <ChevronDown className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
@@ -42,7 +42,7 @@ const SelectTrigger = React.forwardRef<
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
 // --- SelectScrollUpButton / SelectScrollDownButton Components ---
-// These are kept for potential custom use but are not part of the default SelectContent structure below.
+// For potential custom use but not part of the default SelectContent structure below.
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
@@ -82,12 +82,11 @@ SelectScrollDownButton.displayName =
 /**
  * @component SelectContent
  * @description The part of the select that appears when it's open, containing the list of options.
- * Adopts a more standard ShadCN structure where SelectPrimitive.Content primarily hosts SelectPrimitive.Viewport.
  */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({ className, children, position = "popper", ...props }, ref) => ( // Spreads ...props
   <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
     <SelectPrimitive.Content
       ref={ref}
@@ -101,6 +100,7 @@ const SelectContent = React.forwardRef<
       )}
       position={position}
       {...props} // Spread props. If `asChild` is in `props`, SelectPrimitive.Content will receive it.
+                 // This is OK here because SelectPrimitive.Content's child below is a single <SelectPrimitive.Viewport>.
     >
       {/* Standard structure: Viewport handles scrolling content. */}
       <SelectPrimitive.Viewport
@@ -144,16 +144,15 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, asChild, ...otherProps }, ref) => ( // Destructure asChild
   <SelectPrimitive.Item
     ref={ref}
     // Base Tailwind classes for item: flex, cursor, alignment, padding, text style, focus, disabled states.
-    // `data-[state=checked]` (implicit via Radix) styles are handled by the checkmark.
     className={cn(
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
-    {...props} // Spread props. If `asChild` is in `props`, SelectPrimitive.Item will receive it.
+    {...otherProps} // Pass otherProps (which doesn't include asChild)
   >
     {/* Span for positioning the checkmark icon. */}
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -194,6 +193,6 @@ export {
   SelectLabel,
   SelectItem,
   SelectSeparator,
-  SelectScrollUpButton, // Exported for custom use if needed.
-  SelectScrollDownButton, // Exported for custom use if needed.
+  SelectScrollUpButton,
+  SelectScrollDownButton,
 }
