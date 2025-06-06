@@ -38,7 +38,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon> {/* Removed asChild prop */}
+    <SelectPrimitive.Icon>
       <ChevronDown className="h-4 w-4 opacity-50" /> {/* Dropdown arrow icon. */}
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
@@ -148,27 +148,32 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Item
-    ref={ref}
-    // Base Tailwind classes for item: flex, cursor, alignment, padding, text style, focus, disabled states.
-    // `data-[state=checked]` (implicit via Radix) styles are handled by the checkmark.
-    className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      className
-    )}
-    {...props}
-  >
-    {/* Span for positioning the checkmark icon. */}
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-      <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" /> {/* Checkmark icon for selected item. */}
-      </SelectPrimitive.ItemIndicator>
-    </span>
+>(({ className, children, asChild, ...otherProps }, ref) => { // Destructure asChild from props
+  // We explicitly do not pass `asChild` to SelectPrimitive.Item if our wrapper
+  // provides multiple children (like the span for indicator and ItemText),
+  // as this would violate React.Children.only if SelectPrimitive.Item acts as a Slot.
+  return (
+    <SelectPrimitive.Item
+      ref={ref}
+      // Base Tailwind classes for item: flex, cursor, alignment, padding, text style, focus, disabled states.
+      // `data-[state=checked]` (implicit via Radix) styles are handled by the checkmark.
+      className={cn(
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      {...otherProps} // Pass otherProps, excluding asChild
+    >
+      {/* Span for positioning the checkmark icon. */}
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <SelectPrimitive.ItemIndicator>
+          <Check className="h-4 w-4" /> {/* Checkmark icon for selected item. */}
+        </SelectPrimitive.ItemIndicator>
+      </span>
 
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText> {/* The text content of the item. */}
-  </SelectPrimitive.Item>
-))
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText> {/* The text content of the item. */}
+    </SelectPrimitive.Item>
+  );
+});
 SelectItem.displayName = SelectPrimitive.Item.displayName
 
 // --- SelectSeparator Component ---
