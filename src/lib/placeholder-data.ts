@@ -1,23 +1,46 @@
+// src/lib/placeholder-data.ts
+// This file contains placeholder data for the application, primarily for deals and filter categories.
+// ❗ TODO: In a production application, this data would be fetched from a backend API or database.
+// This data is used for UI development and testing before backend integration.
+
+// --- Type Imports ---
+// 🔍 `Deal`, `DealCategory`, and `FilterCategory` types define the structure of the data.
 import type { Deal, DealCategory, FilterCategory } from './types';
 
+// --- Filter Categories ---
+/**
+ * @const filterCategories
+ * @description An array of available categories for filtering deals.
+ * Includes 'All' and specific deal categories.
+ * // TODO: These categories might be dynamically fetched or configurable in a real application.
+ */
 export const filterCategories: FilterCategory[] = ['All', 'Firearms', 'Accessories', 'Ammunition', 'Optics', 'Gear'];
 
+// --- Placeholder Deals Data ---
+/**
+ * @const placeholderDeals
+ * @description An array of `Deal` objects used as placeholder data for the deal listings.
+ * Each object represents a deal with various properties like name, description, price, image, etc.
+ * // 🔍 This data structure should align with the actual data structure from the backend API.
+ * // 🔧 AI agents might populate or augment this data for testing or content generation.
+ */
 export const placeholderDeals: Deal[] = [
   {
     id: '1',
     productName: 'Glock 19 Gen 5 Pistol',
     productDescription: 'The Glock 19 Gen 5 9mm pistol is ideal for a more versatile role due to its reduced dimensions. The new frame design without finger grooves still allows to instantly customize its grip to accommodate any hand size by mounting the different back straps. The reversible magazine catch and ambidextrous slide stop lever make it ideal for left and right-handed shooters.',
     category: 'Firearms',
+    // TODO: Replace placeholder.co URLs with actual image storage or CDN URLs.
     imageUrl: 'https://placehold.co/600x400.png',
-    imageAiHint: 'pistol handgun',
+    imageAiHint: 'pistol handgun', // 🔍 Hint for AI image generation or search.
     retailer: 'Ammo Bros',
-    retailerUrl: 'https://www.ammobros.com/shop/glock/glock-19-gen-5-9mm-pistol-4-02-barrel-15-rounds-122560',
+    retailerUrl: 'https://www.ammobros.com/shop/glock/glock-19-gen-5-9mm-pistol-4-02-barrel-15-rounds-122560', // ❗ Ensure this is a live, relevant URL if possible for testing.
     originalPrice: 599.99,
     dealPrice: 539.99,
-    postedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+    postedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // Simulates "1 day ago".
     tags: ['glock', 'pistol', '9mm', 'gen5', 'handgun'],
-    popularityScore: 95,
-    discountPercentage: Math.round(((599.99 - 539.99) / 599.99) * 100),
+    popularityScore: 95, // TODO: Popularity score would come from backend analytics.
+    discountPercentage: Math.round(((599.99 - 539.99) / 599.99) * 100), // Calculated discount.
   },
   {
     id: '2',
@@ -27,10 +50,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'rifle magazine',
     retailer: 'Primary Arms',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 14.95,
     dealPrice: 10.75,
-    postedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+    postedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // "2 days ago"
     tags: ['magpul', 'pmag', 'ar15', 'magazine', '556'],
     popularityScore: 88,
     discountPercentage: Math.round(((14.95 - 10.75) / 14.95) * 100),
@@ -43,10 +66,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'ammo bullets',
     retailer: 'Palmetto State Armory',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 499.99,
     dealPrice: 429.99,
-    postedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+    postedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // "8 hours ago"
     tags: ['federal', 'ammunition', '556', 'fmj', 'bulk'],
     popularityScore: 92,
     discountPercentage: Math.round(((499.99 - 429.99) / 499.99) * 100),
@@ -59,10 +82,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'rifle scope',
     retailer: 'OpticsPlanet',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 399.99,
     dealPrice: 299.99,
-    postedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+    postedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // "5 days ago"
     tags: ['vortex', 'scope', 'lpvo', 'optics', 'ar15'],
     popularityScore: 85,
     discountPercentage: Math.round(((399.99 - 299.99) / 399.99) * 100),
@@ -75,10 +98,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'weapon light',
     retailer: 'Brownells',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 175.00,
     dealPrice: 139.99,
-    postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // "3 days ago"
     tags: ['streamlight', 'weapon light', 'tlr1', 'tactical'],
     popularityScore: 90,
     discountPercentage: Math.round(((175.00 - 139.99) / 175.00) * 100),
@@ -91,10 +114,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'hearing protection',
     retailer: 'Amazon',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 59.99,
     dealPrice: 45.00,
-    postedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    postedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // "10 days ago"
     tags: ['hearing protection', 'earmuffs', 'range gear'],
     popularityScore: 78,
     discountPercentage: Math.round(((59.99 - 45.00) / 59.99) * 100),
@@ -107,10 +130,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'pistol carbine',
     retailer: 'Guns.com',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 1099.00,
     dealPrice: 949.00,
-    postedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), // 4 days ago
+    postedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), // "4 days ago"
     tags: ['cz', 'scorpion', 'pistol', '9mm', 'pcc'],
     popularityScore: 89,
     discountPercentage: Math.round(((1099.00 - 949.00) / 1099.00) * 100),
@@ -123,10 +146,10 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'red dot sight',
     retailer: 'EuroOptic',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 549.00,
     dealPrice: 479.00,
-    postedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), // 6 days ago
+    postedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), // "6 days ago"
     tags: ['trijicon', 'rmr', 'red dot', 'optic', 'pistol sight'],
     popularityScore: 93,
     discountPercentage: Math.round(((549.00 - 479.00) / 549.00) * 100),
@@ -139,13 +162,60 @@ export const placeholderDeals: Deal[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'defense ammo',
     retailer: 'SGAmmo',
-    retailerUrl: '#',
+    retailerUrl: '#', // ❗ Placeholder URL.
     originalPrice: 34.99,
     dealPrice: 28.99,
-    postedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
+    postedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // "12 hours ago"
     tags: ['federal', 'hst', '9mm', 'jhp', 'self defense'],
     popularityScore: 87,
     discountPercentage: Math.round(((34.99 - 28.99) / 34.99) * 100),
+  },
+  {
+    id: '10',
+    productName: 'Aero Precision AR15 Complete Lower Receiver',
+    productDescription: 'The Aero Precision AR15 Complete Lower Receiver is the perfect base for your custom AR15 build. This lower is complete and ready for your upper receiver. Features a standard M4 carbine stock and A2 pistol grip.',
+    category: 'Firearms',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageAiHint: 'ar15 lower receiver',
+    retailer: 'Aero Precision',
+    retailerUrl: '#',
+    originalPrice: 249.99,
+    dealPrice: 199.99,
+    postedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // "7 days ago"
+    tags: ['ar15', 'lower receiver', 'aero precision', 'build'],
+    popularityScore: 82,
+    discountPercentage: Math.round(((249.99 - 199.99) / 249.99) * 100),
+  },
+  {
+    id: '11',
+    productName: 'SureFire X300 Ultra Weapon Light',
+    productDescription: 'The SureFire X300 Ultra delivers a stunning 1,000 lumens of LED-generated output focused by a Total Internal Reflection (TIR) lens to produce a tight beam with extended reach and significant surround light for peripheral vision.',
+    category: 'Accessories',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageAiHint: 'tactical flashlight',
+    retailer: 'Rainier Arms',
+    retailerUrl: '#',
+    originalPrice: 329.00,
+    dealPrice: 279.00,
+    postedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // "1 hour ago"
+    tags: ['surefire', 'x300', 'weapon light', 'tactical', 'pistol light'],
+    popularityScore: 96,
+    discountPercentage: Math.round(((329.00 - 279.00) / 329.00) * 100),
+  },
+  {
+    id: '12',
+    productName: 'Pelican 1750 Protector Long Case',
+    productDescription: 'The Pelican 1750 Protector Case is designed to protect long guns. It is watertight, crushproof, and dustproof. Features strong polyurethane wheels with stainless steel bearings and an automatic pressure equalization valve.',
+    category: 'Gear',
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageAiHint: 'gun case',
+    retailer: 'B&H Photo',
+    retailerUrl: '#',
+    originalPrice: 299.95,
+    dealPrice: 259.95,
+    postedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // "14 days ago"
+    tags: ['pelican case', 'gun storage', 'rifle case', 'protective gear'],
+    popularityScore: 75,
+    discountPercentage: Math.round(((299.95 - 259.95) / 299.95) * 100),
   }
 ];
-

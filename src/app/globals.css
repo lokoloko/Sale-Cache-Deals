@@ -1,45 +1,64 @@
+/* src/app/globals.css */
+/* This file defines the global styles and Tailwind CSS setup, including the ShadCN UI theme variables. */
+
+/* Tailwind base styles, components, and utilities. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base layer for CSS custom properties (variables) defining the color scheme. */
 @layer base {
+  /* Light theme (default) color definitions using HSL values. */
+  /* 🔍 These variables define the primary color palette for the application's light mode. */
   :root {
-    --background: 206 27% 93%; /* #E8EDF0 */
-    --foreground: 206 10% 25%; /* #3A4348 */
+    /* Background and foreground colors. */
+    --background: 206 27% 93%; /* #E8EDF0 - Light, desaturated blue-gray */
+    --foreground: 206 10% 25%; /* #3A4348 - Darker text color for readability */
 
+    /* Card specific colors. */
     --card: 0 0% 100%; /* white for cards to stand out */
     --card-foreground: 206 10% 25%;
 
+    /* Popover specific colors. */
     --popover: 0 0% 100%;
     --popover-foreground: 206 10% 25%;
 
-    --primary: 207 35% 44%; /* #4A7799 */
-    --primary-foreground: 207 25% 95%; /* #EEF3F6 */
+    /* Primary color for main interactive elements. */
+    --primary: 207 35% 44%; /* #4A7799 - Muted, authoritative blue */
+    --primary-foreground: 207 25% 95%; /* #EEF3F6 - Text color on primary elements */
 
+    /* Secondary color for less prominent elements. */
     --secondary: 207 30% 75%; /* Lighter blue-gray for secondary elements #AFC2D0 */
     --secondary-foreground: 207 35% 25%; /* Darker blue for text on secondary #314A5C */
 
+    /* Muted colors for subtle text or backgrounds. */
     --muted: 206 25% 88%; /* #D8E0E5 */
     --muted-foreground: 206 10% 45%; /* #66727A */
 
-    --accent: 42 75% 60%; /* #E5B84A */
-    --accent-foreground: 42 50% 20%; /* #5B471D */
+    /* Accent color for highlighting important actions (CTAs, prices). */
+    --accent: 42 75% 60%; /* #E5B84A - Warm gold */
+    --accent-foreground: 42 50% 20%; /* #5B471D - Text color on accent elements */
 
+    /* Destructive colors for error states or dangerous actions. */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
+    /* Border, input, and ring colors. */
     --border: 206 20% 85%; /* #CCD5DB */
     --input: 206 20% 85%;
-    --ring: 207 35% 44%; /* Primary color for rings */
+    --ring: 207 35% 44%; /* Primary color for focus rings */
 
+    /* Border radius for rounded corners on elements. */
     --radius: 0.5rem; /* For rounded corners */
 
+    /* Chart specific colors (up to 5). */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
+    /* Sidebar specific colors - for consistency if a sidebar is added. */
     --sidebar-background: 206 25% 88%; /* #D8E0E5 */
     --sidebar-foreground: 206 10% 25%;
     --sidebar-primary: 207 35% 44%;
@@ -50,6 +69,8 @@
     --sidebar-ring: 207 35% 44%;
   }
 
+  /* Dark theme color definitions. */
+  /* 🔍 These variables define the primary color palette for the application's dark mode. */
   .dark {
     --background: 206 10% 15%; 
     --foreground: 206 25% 90%; 
@@ -96,12 +117,15 @@
   }
 }
 
+/* Further base layer customizations. */
 @layer base {
+  /* Apply border color by default to all elements. */
   * {
     @apply border-border;
   }
+  /* Apply background, text color, and font family to the body. */
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter), sans-serif; /* Uses the Inter font defined in layout.tsx */
   }
 }
