@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select" // Radix UI Select primitives.
-import { Check, ChevronDown, ChevronUp } from "lucide-react" // Icons for checkmark and dropdown arrows.
+import { Check, ChevronDown } from "lucide-react" // Icons for checkmark and dropdown arrows.
 
 import { cn } from "@/lib/utils" // Utility for merging Tailwind classes.
 
@@ -21,61 +21,30 @@ const SelectValue = SelectPrimitive.Value // Component to display the selected v
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, asChild, ...otherProps }, ref) => ( // Destructure asChild
-  <SelectPrimitive.Trigger
-    ref={ref}
-    // Base Tailwind classes for the trigger: flex, height, width, alignment, border, background, padding, text style, focus, disabled states.
-    // `[&>span]:line-clamp-1` ensures the selected value text doesn't overflow.
-    className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-      className // Allows overriding or extending styles.
-    )}
-    {...otherProps} // Pass otherProps (which doesn't include asChild). This ensures SelectPrimitive.Trigger doesn't become a Slot unless intended by its direct usage.
-  >
-    {children} {/* Typically contains <SelectValue />. This is the first child of SelectPrimitive.Trigger. */}
-    {/* SelectPrimitive.Icon acts as the second child. It should handle its own child (ChevronDown) via its default slotting behavior. */}
-    <SelectPrimitive.Icon>
-       <ChevronDown className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-))
+>(({ className, children, asChild, ...otherProps }, ref) => { // Explicitly destructure asChild
+  // `asChild` is destructured and NOT passed in `...otherProps` to `SelectPrimitive.Trigger`.
+  // This is correct because our wrapper provides multiple children to `SelectPrimitive.Trigger`
+  // (the `children` prop like <SelectValue /> AND <SelectPrimitive.Icon />),
+  // which would conflict if `SelectPrimitive.Trigger` became a Slot.
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        className
+      )}
+      {...otherProps} // Pass otherProps (which does NOT include asChild)
+    >
+      {children} {/* Typically contains <SelectValue />. This is the first child of SelectPrimitive.Trigger. */}
+      {/* SelectPrimitive.Icon acts as the second child. */}
+      <SelectPrimitive.Icon>
+        <ChevronDown className="h-4 w-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+});
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
-// --- SelectScrollUpButton / SelectScrollDownButton Components ---
-const SelectScrollUpButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollUpButton
-    ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      className
-    )}
-    {...props}
-  >
-    <ChevronUp className="h-4 w-4" />
-  </SelectPrimitive.ScrollUpButton>
-))
-SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
-
-const SelectScrollDownButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollDownButton
-    ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      className
-    )}
-    {...props}
-  >
-    <ChevronDown className="h-4 w-4" />
-  </SelectPrimitive.ScrollDownButton>
-))
-SelectScrollDownButton.displayName =
-  SelectPrimitive.ScrollDownButton.displayName
 
 // --- SelectContent Component ---
 /**
@@ -85,8 +54,13 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => ( // Spreads ...props
-  <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
+>(({ className, children, position = "popper", asChild, container, ...otherProps }, ref) => { // Destructure asChild and container
+  // `asChild` is destructured and NOT passed in `...otherProps` to `SelectPrimitive.Content`.
+  // `container` is destructured but NOT explicitly passed to `SelectPrimitive.Portal` to rely on default behavior.
+  // This is correct as `SelectPrimitive.Content` in our wrapper has one child (<SelectPrimitive.Viewport>),
+  // but being explicit with `asChild` adds robustness.
+  return (
+  <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. Removed explicit container prop. */}
     <SelectPrimitive.Content
       ref={ref}
       // Base Tailwind classes for content: z-index, max-height, width, overflow, border, background, shadow, animations for open/close states.
@@ -98,8 +72,7 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
-      {...props} // If `props` contains `asChild`, SelectPrimitive.Content will receive it.
-                 // This is fine because our wrapper provides a single child (<SelectPrimitive.Viewport>) to SelectPrimitive.Content.
+      {...otherProps} // Pass otherProps (which does NOT include asChild or container)
     >
       {/* Standard structure: Viewport handles scrolling content. */}
       <SelectPrimitive.Viewport
@@ -114,7 +87,8 @@ const SelectContent = React.forwardRef<
       </SelectPrimitive.Viewport>
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
-))
+  );
+});
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
 // --- SelectLabel Component ---
@@ -143,7 +117,12 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, asChild, ...otherProps }, ref) => ( // Destructure asChild
+>(({ className, children, asChild, ...otherProps }, ref) => { // Destructure asChild
+  // `asChild` is destructured and NOT passed in `...otherProps` to `SelectPrimitive.Item`.
+  // This is correct because our wrapper provides multiple children to `SelectPrimitive.Item`
+  // (the `span` for checkmark AND <SelectPrimitive.ItemText />),
+  // which would conflict if `SelectPrimitive.Item` became a Slot.
+  return (
   <SelectPrimitive.Item
     ref={ref}
     // Base Tailwind classes for item: flex, cursor, alignment, padding, text style, focus, disabled states.
@@ -151,7 +130,7 @@ const SelectItem = React.forwardRef<
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
-    {...otherProps} // Pass otherProps (which doesn't include asChild). This ensures SelectPrimitive.Item doesn't become a Slot if our wrapper provides multiple children.
+    {...otherProps} // Pass otherProps (which does NOT include asChild)
   >
     {/* Span for positioning the checkmark icon. This is the first child of SelectPrimitive.Item. */}
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -163,7 +142,8 @@ const SelectItem = React.forwardRef<
     {/* SelectPrimitive.ItemText is the second child of SelectPrimitive.Item. */}
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText> {/* The text content of the item. */}
   </SelectPrimitive.Item>
-));
+  );
+});
 SelectItem.displayName = SelectPrimitive.Item.displayName
 
 // --- SelectSeparator Component ---
@@ -184,6 +164,42 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
+// These are not typically part of the default exported SelectContent structure in ShadCN
+// const SelectScrollUpButton = React.forwardRef<
+//   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+//   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+// >(({ className, ...props }, ref) => (
+//   <SelectPrimitive.ScrollUpButton
+//     ref={ref}
+//     className={cn(
+//       "flex cursor-default items-center justify-center py-1",
+//       className
+//     )}
+//     {...props}
+//   >
+//     <ChevronUp className="h-4 w-4" />
+//   </SelectPrimitive.ScrollUpButton>
+// ))
+// SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
+
+// const SelectScrollDownButton = React.forwardRef<
+//   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+//   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+// >(({ className, ...props }, ref) => (
+//   <SelectPrimitive.ScrollDownButton
+//     ref={ref}
+//     className={cn(
+//       "flex cursor-default items-center justify-center py-1",
+//       className
+//     )}
+//     {...props}
+//   >
+//     <ChevronDown className="h-4 w-4" />
+//   </SelectPrimitive.ScrollDownButton>
+// ))
+// SelectScrollDownButton.displayName =
+//   SelectPrimitive.ScrollDownButton.displayName
+
 export {
   Select,
   SelectGroup,
@@ -193,6 +209,6 @@ export {
   SelectLabel,
   SelectItem,
   SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
+  // SelectScrollUpButton, // Not exporting by default
+  // SelectScrollDownButton, // Not exporting by default
 }
