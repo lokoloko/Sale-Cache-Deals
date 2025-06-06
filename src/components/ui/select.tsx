@@ -30,11 +30,11 @@ const SelectTrigger = React.forwardRef<
       "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className // Allows overriding or extending styles.
     )}
-    {...otherProps} // Pass otherProps (which doesn't include asChild)
+    {...otherProps} // Pass otherProps (which doesn't include asChild). This ensures SelectPrimitive.Trigger doesn't become a Slot unless intended by its direct usage.
   >
-    {children} {/* Typically contains <SelectValue /> */}
-    {/* Explicitly set asChild={false} for Icon if it wraps a single icon component directly */}
-    <SelectPrimitive.Icon asChild={false}>
+    {children} {/* Typically contains <SelectValue />. This is the first child of SelectPrimitive.Trigger. */}
+    {/* SelectPrimitive.Icon acts as the second child. It should handle its own child (ChevronDown) via its default slotting behavior. */}
+    <SelectPrimitive.Icon>
        <ChevronDown className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
@@ -42,7 +42,6 @@ const SelectTrigger = React.forwardRef<
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
 // --- SelectScrollUpButton / SelectScrollDownButton Components ---
-// For potential custom use but not part of the default SelectContent structure below.
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
@@ -99,8 +98,8 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
-      {...props} // Spread props. If `asChild` is in `props`, SelectPrimitive.Content will receive it.
-                 // This is OK here because SelectPrimitive.Content's child below is a single <SelectPrimitive.Viewport>.
+      {...props} // If `props` contains `asChild`, SelectPrimitive.Content will receive it.
+                 // This is fine because our wrapper provides a single child (<SelectPrimitive.Viewport>) to SelectPrimitive.Content.
     >
       {/* Standard structure: Viewport handles scrolling content. */}
       <SelectPrimitive.Viewport
@@ -152,15 +151,16 @@ const SelectItem = React.forwardRef<
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
-    {...otherProps} // Pass otherProps (which doesn't include asChild)
+    {...otherProps} // Pass otherProps (which doesn't include asChild). This ensures SelectPrimitive.Item doesn't become a Slot if our wrapper provides multiple children.
   >
-    {/* Span for positioning the checkmark icon. */}
+    {/* Span for positioning the checkmark icon. This is the first child of SelectPrimitive.Item. */}
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" /> {/* Checkmark icon for selected item. */}
       </SelectPrimitive.ItemIndicator>
     </span>
 
+    {/* SelectPrimitive.ItemText is the second child of SelectPrimitive.Item. */}
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText> {/* The text content of the item. */}
   </SelectPrimitive.Item>
 ));
