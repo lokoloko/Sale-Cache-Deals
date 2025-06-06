@@ -11,7 +11,7 @@ import Link from 'next/link'; // For client-side navigation.
 // --- UI Component Imports ---
 // Reusable components from ShadCN UI library.
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button, buttonVariants } from '@/components/ui/button'; // Import buttonVariants
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // --- Icon Imports ---
@@ -19,7 +19,7 @@ import { Tag, ExternalLink, Percent, DollarSign } from 'lucide-react';
 
 // --- Utility Imports ---
 import { formatDistanceToNow } from 'date-fns'; // For displaying relative time (e.g., "2 days ago").
-import { cn } from '@/lib/utils'; // Import cn utility
+import { cn } from '@/lib/utils';
 
 // --- Component Props Definition ---
 /**
@@ -47,8 +47,6 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
   const timeAgo = formatDistanceToNow(new Date(deal.postedAt), { addSuffix: true });
 
   return (
-    // Reusable Card component serves as the base for the deal's visual structure.
-    // Tailwind classes define flex layout, shadows, transitions, and full height within its grid cell.
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
       {/* CardHeader typically contains the primary visual element, like an image or title. Here, it's the product image. */}
       <CardHeader className="p-0 relative"> {/* `relative` for positioning the discount badge. */}
@@ -83,13 +81,11 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
           <p className="text-xs text-muted-foreground">{timeAgo}</p>
         </div>
         {/* Product name, linking to the deal's detail page. */}
-        <Link href={`/deals/${deal.id}`} legacyBehavior passHref>
-          <a className="hover:underline">
+        <Link href={`/deals/${deal.id}`} passHref>
             {/* CardTitle for the product name. `h-12 overflow-hidden` attempts to keep it to two lines. */}
-            <CardTitle className="text-lg font-semibold leading-tight mb-2 h-12 overflow-hidden">
+            <CardTitle className="text-lg font-semibold leading-tight mb-2 h-12 overflow-hidden hover:underline">
               {deal.productName}
             </CardTitle>
-          </a>
         </Link>
         {/* Pricing information: deal price and original price (if applicable). */}
         <div className="flex items-baseline gap-2 mb-2">
@@ -113,11 +109,14 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
         {deal.tags && deal.tags.length > 0 && (
           // `max-h-12 overflow-y-auto` allows tags to scroll if they exceed two lines.
           <div className="flex flex-wrap gap-1 mb-1 max-h-12 overflow-y-auto">
-            {/* Show up to 5 tags to prevent clutter. */}
             {deal.tags.slice(0, 5).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                <Tag className="h-3 w-3 mr-1" />{tag}
+              // Make tag pills clickable links to the tag page
+              <Link key={tag} href={`/tag/${encodeURIComponent(tag)}`} legacyBehavior passHref>
+                {/* Show up to 5 tags to prevent clutter. */}
+              <Badge asChild variant="outline" className="text-xs cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
+                <a>{tag}</a>
               </Badge>
+            </Link>
             ))}
           </div>
         )}
@@ -127,9 +126,7 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
         <div className="flex w-full gap-2"> {/* Flex container for buttons. */}
           {/* Button to navigate to the deal's detail page. */}
           <Button variant="outline" asChild className="flex-1">
-            <Link href={`/deals/${deal.id}`}>
-                View Details
-            </Link>
+            <Link href={`/deals/${deal.id}`}>View Details</Link>
           </Button>
           {/* "Go to Deal" link styled as a button */}
           {/* // TODO: `deal.retailerUrl` should be a valid external link provided by the backend. */}
@@ -138,8 +135,8 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              buttonVariants({ variant: "default" }), // Base button styles from ShadCN
-              "flex-1 bg-accent text-accent-foreground hover:bg-accent/90" // Custom styles (overrides default bg, adds flex-1)
+              buttonVariants({ variant: "default", size: "default" }),
+              "flex-1 bg-accent text-accent-foreground hover:bg-accent/90 inline-flex items-center justify-center"
             )}
           >
             <span className="inline-flex items-center justify-center"> {/* Groups text and icon for alignment */}

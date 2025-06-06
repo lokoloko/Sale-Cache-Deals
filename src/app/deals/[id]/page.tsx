@@ -21,7 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 
 // --- Icon Imports ---
-import { ArrowLeft, ExternalLink, Tag, DollarSign, Percent, CalendarDays, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Tag, DollarSign, Percent, CalendarDays, ShoppingCart, Share2 } from 'lucide-react';
 
 // --- Utility Imports ---
 import { format } from 'date-fns'; // For formatting dates.
@@ -126,6 +126,9 @@ export default async function ProductDetailPage(props: ProductDetailPageProps) {
             </Badge>
           )}
         </CardHeader>
+      </Card>
+      <div className="flex items-center justify-between mb-6">
+        <Card className="w-full overflow-hidden shadow-xl">
         <CardContent className="p-6 md:p-8"> {/* Main content area of the card. */}
           <Badge variant="secondary" className="mb-2">{deal.category}</Badge>
           <CardTitle className="text-3xl font-bold mb-2 text-foreground">{deal.productName}</CardTitle>
@@ -169,7 +172,9 @@ export default async function ProductDetailPage(props: ProductDetailPageProps) {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {deal.tags.map((tag) => (
-                  <Badge key={tag} variant="outline">{tag}</Badge>
+                  <Link key={tag} href={`/tag/${encodeURIComponent(tag)}`}>
+                    <Badge variant="outline" className="cursor-pointer hover:bg-accent">{tag}</Badge>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -185,7 +190,13 @@ export default async function ProductDetailPage(props: ProductDetailPageProps) {
             </a>
           </Button>
         </CardContent>
-      </Card>
+        </Card>
+        {/* Share Button */}
+        <Button variant="outline" size="icon" className="ml-4 self-center">
+          {/* 🔧 Implement share functionality */}
+          <Share2 className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }
