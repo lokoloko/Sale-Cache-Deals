@@ -126,11 +126,9 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
       <CardFooter className="p-4 pt-0 border-t mt-auto">
         <div className="flex w-full gap-2"> {/* Flex container for buttons. */}
           {/* Button to navigate to the deal's detail page. */}
-          <Button variant="outline" asChild className="flex-1"> {/* `flex-1` makes buttons share space equally. */}
-            <Link href={`/deals/${deal.id}`} legacyBehavior passHref>
-              <a className="flex items-center justify-center w-full h-full">
+          <Button variant="outline" asChild className="flex-1">
+            <Link href={`/deals/${deal.id}`}>
                 View Details
-              </a>
             </Link>
           </Button>
           {/* "Go to Deal" link styled as a button */}
@@ -144,7 +142,7 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
               "flex-1 bg-accent text-accent-foreground hover:bg-accent/90" // Custom styles (overrides default bg, adds flex-1)
             )}
           >
-            <span className="inline-flex items-center"> {/* Groups text and icon for alignment */}
+            <span className="inline-flex items-center justify-center"> {/* Groups text and icon for alignment */}
               Go to Deal <ExternalLink className="ml-1 h-4 w-4" />
             </span>
           </a>
