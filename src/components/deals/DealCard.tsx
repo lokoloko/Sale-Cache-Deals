@@ -133,8 +133,10 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
           {/* Button to go directly to the retailer's deal page (external link). */}
           <Button variant="default" asChild className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90">
             {/* // TODO: `deal.retailerUrl` should be a valid external link provided by the backend. */}
-            <a href={deal.retailerUrl} target="_blank" rel="noopener noreferrer"> {/* Security for external links. */}
-              Go to Deal <ExternalLink className="ml-1 h-4 w-4" />
+            <a href={deal.retailerUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-full"> {/* Ensure link behaves like button content and fills space */}
+              <span className="inline-flex items-center">
+                Go to Deal <ExternalLink className="ml-1 h-4 w-4" />
+              </span>
             </a>
           </Button>
         </div>
