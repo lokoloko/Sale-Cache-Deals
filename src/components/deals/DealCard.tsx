@@ -15,7 +15,7 @@ import { Button, buttonVariants } from '@/components/ui/button'; // Import butto
 import { Badge } from '@/components/ui/badge';
 
 // --- Icon Imports ---
-import { Tag, ExternalLink, Percent, DollarSign, ShoppingCart } from 'lucide-react';
+import { Tag, ExternalLink, Percent, DollarSign } from 'lucide-react';
 
 // --- Utility Imports ---
 import { formatDistanceToNow } from 'date-fns'; // For displaying relative time (e.g., "2 days ago").
@@ -127,8 +127,10 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
         <div className="flex w-full gap-2"> {/* Flex container for buttons. */}
           {/* Button to navigate to the deal's detail page. */}
           <Button variant="outline" asChild className="flex-1"> {/* `flex-1` makes buttons share space equally. */}
-            <Link href={`/deals/${deal.id}`}>
-              View Details
+            <Link href={`/deals/${deal.id}`} legacyBehavior passHref>
+              <a className="flex items-center justify-center w-full h-full">
+                View Details
+              </a>
             </Link>
           </Button>
           {/* "Go to Deal" link styled as a button */}
@@ -138,7 +140,7 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              buttonVariants({ variant: "default" }), // Base button styles
+              buttonVariants({ variant: "default" }), // Base button styles from ShadCN
               "flex-1 bg-accent text-accent-foreground hover:bg-accent/90" // Custom styles (overrides default bg, adds flex-1)
             )}
           >
