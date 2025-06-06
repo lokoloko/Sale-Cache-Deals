@@ -31,11 +31,11 @@ const SelectTrigger = React.forwardRef<
       "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className // Allows overriding or extending styles.
     )}
-    {...props}
+    {...props} // Spread all props, including asChild if present.
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon>
-      <ChevronDown className="h-4 w-4 opacity-50" /> {/* Dropdown arrow icon. */}
+    <SelectPrimitive.Icon asChild>
+       <ChevronDown className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
@@ -86,11 +86,7 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", asChild, ...otherProps }, ref) => {
-  // `asChild` is explicitly destructured from props.
-  // `...otherProps` will NOT contain `asChild`.
-  // This prevents `SelectPrimitive.Content` from being treated as a Slot if our wrapper
-  // provides multiple children (which it does: SelectScrollUpButton, Viewport, SelectScrollDownButton).
+>(({ className, children, position = "popper", ...props }, ref) => {
   return (
     <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
       <SelectPrimitive.Content
@@ -104,7 +100,7 @@ const SelectContent = React.forwardRef<
           className
         )}
         position={position}
-        {...otherProps} // Pass `otherProps` which explicitly excludes `asChild`.
+        {...props} // Spread all props, including asChild if present.
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
@@ -150,11 +146,7 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, asChild, ...otherProps }, ref) => {
-  // `asChild` is explicitly destructured from props.
-  // `...otherProps` will NOT contain `asChild`.
-  // This prevents `SelectPrimitive.Item` from being treated as a Slot if our wrapper
-  // provides multiple children (which it does: span for checkmark, ItemText).
+>(({ className, children, ...props }, ref) => {
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -164,7 +156,7 @@ const SelectItem = React.forwardRef<
         "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
-      {...otherProps} // Pass `otherProps` which explicitly excludes `asChild`.
+      {...props} // Spread all props, including asChild if present.
     >
       {/* Span for positioning the checkmark icon. */}
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -209,5 +201,3 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
-
-    
