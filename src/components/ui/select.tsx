@@ -38,7 +38,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon>
+    <SelectPrimitive.Icon> {/* Removed asChild here in a previous fix, which was correct for Icon */}
       <ChevronDown className="h-4 w-4 opacity-50" /> {/* Dropdown arrow icon. */}
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
@@ -90,7 +90,7 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({ className, children, position = "popper", asChild, ...otherProps }, ref) => ( // Explicitly destructure `asChild`
   <SelectPrimitive.Portal> {/* Portals the content to avoid z-index issues. */}
     <SelectPrimitive.Content
       ref={ref}
@@ -103,7 +103,7 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
-      {...props}
+      {...otherProps} // Pass `otherProps` which excludes `asChild`, preventing SelectPrimitive.Content from becoming a Slot with multiple children.
     >
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
@@ -148,10 +148,7 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, asChild, ...otherProps }, ref) => { // Destructure asChild from props
-  // We explicitly do not pass `asChild` to SelectPrimitive.Item if our wrapper
-  // provides multiple children (like the span for indicator and ItemText),
-  // as this would violate React.Children.only if SelectPrimitive.Item acts as a Slot.
+>(({ className, children, asChild, ...otherProps }, ref) => { // Destructure asChild here too
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -161,7 +158,7 @@ const SelectItem = React.forwardRef<
         "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
-      {...otherProps} // Pass otherProps, excluding asChild
+      {...otherProps} // Pass `otherProps` which excludes `asChild`
     >
       {/* Span for positioning the checkmark icon. */}
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
