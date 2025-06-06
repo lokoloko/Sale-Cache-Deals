@@ -11,7 +11,7 @@ import Link from 'next/link'; // For client-side navigation.
 // --- UI Component Imports ---
 // Reusable components from ShadCN UI library.
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button'; // Import buttonVariants
 import { Badge } from '@/components/ui/badge';
 
 // --- Icon Imports ---
@@ -19,6 +19,7 @@ import { Tag, ExternalLink, Percent, DollarSign, ShoppingCart } from 'lucide-rea
 
 // --- Utility Imports ---
 import { formatDistanceToNow } from 'date-fns'; // For displaying relative time (e.g., "2 days ago").
+import { cn } from '@/lib/utils'; // Import cn utility
 
 // --- Component Props Definition ---
 /**
@@ -130,20 +131,21 @@ const DealCard: React.FC<DealCardProps> = ({ deal }) => {
               View Details
             </Link>
           </Button>
-          {/* Button to go directly to the retailer's deal page (external link). */}
-          <Button variant="default" asChild className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90">
-            {/* // TODO: `deal.retailerUrl` should be a valid external link provided by the backend. */}
-            <a
-              href={deal.retailerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              // Removed className here: the parent Button (Slot) will apply styles.
-            >
-              <span className="inline-flex items-center"> {/* This span groups text and icon for alignment */}
-                Go to Deal <ExternalLink className="ml-1 h-4 w-4" />
-              </span>
-            </a>
-          </Button>
+          {/* "Go to Deal" link styled as a button */}
+          {/* // TODO: `deal.retailerUrl` should be a valid external link provided by the backend. */}
+          <a
+            href={deal.retailerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "default" }), // Base button styles
+              "flex-1 bg-accent text-accent-foreground hover:bg-accent/90" // Custom styles (overrides default bg, adds flex-1)
+            )}
+          >
+            <span className="inline-flex items-center"> {/* Groups text and icon for alignment */}
+              Go to Deal <ExternalLink className="ml-1 h-4 w-4" />
+            </span>
+          </a>
         </div>
       </CardFooter>
     </Card>
