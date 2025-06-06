@@ -38,7 +38,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children} {/* Typically contains <SelectValue /> */}
-    <SelectPrimitive.Icon asChild>
+    <SelectPrimitive.Icon> {/* Removed asChild prop */}
       <ChevronDown className="h-4 w-4 opacity-50" /> {/* Dropdown arrow icon. */}
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
